@@ -1,5 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using VShop.ProductApi.Context;
+using VShop.ProductApi.Repositories.Category;
+using VShop.ProductApi.Repositories.Product;
+using VShop.ProductApi.Services.Category;
+using VShop.ProductApi.Services.Product;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +17,12 @@ builder.Services.AddSwaggerGen();
 var connectionString = builder.Configuration.GetConnectionString("PostgresConnection");
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
+
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IProductRepository, ProductyRepository>();
+
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IProductService, ProductService>();
 
 var app = builder.Build();
 
