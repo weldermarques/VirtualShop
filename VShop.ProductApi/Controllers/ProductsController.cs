@@ -6,7 +6,7 @@ namespace VShop.ProductApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ProductController(IProductService productService) : ControllerBase
+public class ProductsController(IProductService productService) : ControllerBase
 {
     private readonly IProductService _productService = productService;
 

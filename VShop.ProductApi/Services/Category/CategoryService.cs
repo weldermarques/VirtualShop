@@ -40,7 +40,7 @@ public class CategoryService(ICategoryRepository categoryRepository) : ICategory
     {
         var categories = await _categoryRepository.GetCategoriesProducts();
 
-        return categories.Select(s => s.ToCategoryDto()).AsEnumerable();
+        return categories.Select(s => s.ToCategoryDto());
     }
 
     public async Task<bool> Delete(int id)

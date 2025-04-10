@@ -15,7 +15,6 @@ public static class ProductExtension
             Price = productDto.Price,
             ImageUrl = productDto.ImageUrl,
             Stock = productDto.Stock,
-            Category = productDto.Category,
             CategoryId = productDto.CategoryId
         };
     }
@@ -30,7 +29,6 @@ public static class ProductExtension
             Price = product.Price,
             ImageUrl = product.ImageUrl,
             Stock = product.Stock,
-            Category = product.Category,
             CategoryId = product.CategoryId
         };
     }

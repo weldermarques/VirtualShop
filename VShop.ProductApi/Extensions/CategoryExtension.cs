@@ -11,7 +11,7 @@ public static class CategoryExtension
         {
             Id = categoryDto.Id,
             Name = categoryDto.Name,
-            Products = categoryDto.Products
+            Products = categoryDto.Products?.Select(s => s.ToProduct()).ToList()
         };
     }
 
@@ -21,7 +21,7 @@ public static class CategoryExtension
         {
             Id = category.Id,
             Name = category.Name,
-            Products = category.Products
+            Products = category.Products?.Select(s => s.ToProductDto()).ToList()
         };
     }
 }
