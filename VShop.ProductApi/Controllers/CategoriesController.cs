@@ -6,21 +6,20 @@ namespace VShop.ProductApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class CategoriesController(ICategoryService categoryService) : ControllerBase
+public class CategoriesController(ICategoryService categoryService, 
+    ILogger<CategoriesController> logger) : ControllerBase
 {
-    private readonly ICategoryService _categoryService = categoryService;
-
     [HttpGet]
     public async Task<ActionResult<IEnumerable<CategoryDto>>> Get()
     {
         try
         {
-            var categories = await _categoryService.GetAll();
+            var categories = await categoryService.GetAll();
             return Ok(categories);
         }
         catch(Exception e)
         {
-            //Create log
+            logger.LogError(e.Message, e.InnerException);
             return BadRequest("Error fetching categories");
         }
     }
@@ -30,12 +29,12 @@ public class CategoriesController(ICategoryService categoryService) : Controller
     {
         try
         {
-            var categories = await _categoryService.GetCategoriesProducts();
+            var categories = await categoryService.GetCategoriesProducts();
             return Ok(categories);
         }
         catch (Exception e)
         {
-            //Create log
+            logger.LogError(e.Message, e.InnerException);
             return BadRequest("Error fetching categories");
         }
     }
@@ -45,7 +44,7 @@ public class CategoriesController(ICategoryService categoryService) : Controller
     {
         try
         {
-            var category = await _categoryService.GetById(id);
+            var category = await categoryService.GetById(id);
 
             if (category is null)
                 return NotFound("Category not found");
@@ -54,7 +53,7 @@ public class CategoriesController(ICategoryService categoryService) : Controller
         }
         catch (Exception e)
         {
-            //Create log
+            logger.LogError(e.Message, e.InnerException);
             return BadRequest("Error fetching category");
         }
     }
@@ -64,7 +63,7 @@ public class CategoriesController(ICategoryService categoryService) : Controller
     {
         try
         {
-            var isSuccess = await _categoryService.Add(categoryDto);
+            var isSuccess = await categoryService.Add(categoryDto);
 
             if (!isSuccess)
                 return NotFound("Category not found");
@@ -75,7 +74,7 @@ public class CategoriesController(ICategoryService categoryService) : Controller
         }
         catch (Exception e)
         {
-            //Create log
+            logger.LogError(e.Message, e.InnerException);
             return BadRequest("Error add category");
         }
     }
@@ -88,16 +87,13 @@ public class CategoriesController(ICategoryService categoryService) : Controller
             if (id != categoryDto.Id)
                 return BadRequest();
 
-            if (categoryDto is null)
-                return BadRequest();
-
-            var result = await _categoryService.Update(categoryDto);
+            var result = await categoryService.Update(categoryDto);
 
             return Ok(result);
         }
         catch (Exception e)
         {
-            //Create log
+            logger.LogError(e.Message, e.InnerException);
             return BadRequest("Error update category");
         }
     }
@@ -107,12 +103,12 @@ public class CategoriesController(ICategoryService categoryService) : Controller
     {
         try
         {
-            var category = await _categoryService.GetById(id);
+            var category = await categoryService.GetById(id);
 
             if (category is null)
                 return NotFound("Category not found");
 
-            var isSuccess = await _categoryService.Delete(id);
+            var isSuccess = await categoryService.Delete(id);
 
             return isSuccess ?
                 Ok() :
@@ -120,7 +116,7 @@ public class CategoriesController(ICategoryService categoryService) : Controller
         }
         catch (Exception e)
         {
-            //Create log
+            logger.LogError(e.Message, e.InnerException);
             return BadRequest("Error delete category");
         }
     }

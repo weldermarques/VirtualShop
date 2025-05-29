@@ -6,21 +6,20 @@ namespace VShop.ProductApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ProductsController(IProductService productService) : ControllerBase
+public class ProductsController(IProductService productService,
+    ILogger<ProductsController> logger) : ControllerBase
 {
-    private readonly IProductService _productService = productService;
-
     [HttpGet]
     public async Task<ActionResult<IEnumerable<ProductDto>>> Get()
     {
         try
         {
-            var products = await _productService.GetAll();
+            var products = await productService.GetAll();
             return Ok(products);
         }
         catch (Exception e)
         {
-            //Create log
+            logger.LogError(e.Message, e.InnerException);
             return BadRequest("Error fetching products");
         }
     }
@@ -30,7 +29,7 @@ public class ProductsController(IProductService productService) : ControllerBase
     {
         try
         {
-            var products = await _productService.GetById(id);
+            var products = await productService.GetById(id);
 
             if (products is null)
                 return NotFound("Product not found");
@@ -39,7 +38,7 @@ public class ProductsController(IProductService productService) : ControllerBase
         }
         catch (Exception e)
         {
-            //Create log
+            logger.LogError(e.Message, e.InnerException);
             return BadRequest("Error fetching product");
         }
     }
@@ -49,7 +48,7 @@ public class ProductsController(IProductService productService) : ControllerBase
     {
         try
         {
-            var isSuccess = await _productService.Add(productDto);
+            var isSuccess = await productService.Add(productDto);
 
             if (!isSuccess)
                 return NotFound("Product not found");
@@ -60,7 +59,7 @@ public class ProductsController(IProductService productService) : ControllerBase
         }
         catch (Exception e)
         {
-            //Create log
+            logger.LogError(e.Message, e.InnerException);
             return BadRequest("Error add product");
         }
     }
@@ -73,16 +72,13 @@ public class ProductsController(IProductService productService) : ControllerBase
             if (id != productDto.Id)
                 return BadRequest();
 
-            if (productDto is null)
-                return BadRequest();
-
-            var result = await _productService.Update(productDto);
+            var result = await productService.Update(productDto);
 
             return Ok(result);
         }
         catch (Exception e)
         {
-            //Create log
+            logger.LogError(e.Message, e.InnerException);
             return BadRequest("Error update product");
         }
     }
@@ -92,12 +88,12 @@ public class ProductsController(IProductService productService) : ControllerBase
     {
         try
         {
-            var products = await _productService.GetById(id);
+            var products = await productService.GetById(id);
 
             if (products is null)
                 return NotFound("Product not found");
 
-            var isSuccess = await _productService.Delete(id);
+            var isSuccess = await productService.Delete(id);
 
             return isSuccess ?
                 Ok() :
@@ -105,7 +101,7 @@ public class ProductsController(IProductService productService) : ControllerBase
         }
         catch (Exception e)
         {
-            //Create log
+            logger.LogError(e.Message, e.InnerException);
             return BadRequest("Error delete product");
         }
     }
